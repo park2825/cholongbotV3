@@ -1,0 +1,9 @@
+discord
+Request
+bs4
+selenium
+youtube_dl
+requests
+unicodedata
+warnings
+openpyxl
