@@ -496,7 +496,7 @@ async def on_message(message):
         main2 = main1.find("strong", {"class":"num"})
         main3 = main2.text
 
-        main4 = bsObj.find("div", {"class":"circle blue level4"})
+        main4 = bsObj.find("div", {"class":"circle blue level5"})
         main5 = main4.find("strong", {"class":"num"})
         main6 = main5.text
 
