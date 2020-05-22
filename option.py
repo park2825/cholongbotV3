@@ -1,0 +1,9 @@
+owner = [682524312858656789]
+first = '초롱아'
+no = '공지'
+comand = first + no
+nfct = True
+nfctname='초롱봇 공지'
+allowprefix=["notice", "공지"]
+disallowprefix = ["밴", "경고", "제재", "길드", "ban", "worry", "warn", "guild"]
+__Do_Per_Task = 5
