@@ -615,5 +615,5 @@ async def on_message(message):
 
 
     
-
-client.run(setting.token)
+access_token = os.environ["TOKEN"]
+client.run(TOKEN)
