@@ -1,3 +1,3 @@
 a = ['초롱아', '초롱아 이런', '초롱아 저런']
 b =  [['🤷‍왜','답변','외수영장','놀자','나두','🤷‍왜'],['🤦‍저런','ㅇㅅㅇ','🤦‍저런'],['🤦‍이런','ㅇㅅㅇ','🤦‍이런']]
-token = token
+token = 'Njg4OTE4MzczMjAzMDUwNTgx.XsfX4A.NLGPK-MJFE87P_J42vXoz831Rdw'
