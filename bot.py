@@ -142,79 +142,86 @@ async def on_message(message):
         await message.channel.send(embed=e)
 
     if message.content.startswith("초롱아 날씨"):
-        lean = message.content.split("초롱아 날씨 ")
-        location = lean[1]
-        enc_location = urllib.parse.quote(location+'날씨')
-        hdr = {'user-Agent': 'Mozila/5.0'}
-        url = 'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=l&ie=utf8&query=' + enc_location
-        print(url)
-        req = Request(url, headers=hdr)
-        html = urllib.request.urlopen(req)
-        bsObj = bs4.BeautifulSoup(html, "html.parser")
-        todayBase = bsObj.find('div', {'class': 'main_info'})
+        try:
+            lean = message.content.split("초롱아 날씨 ")
+            location = lean[1]
+            enc_location = urllib.parse.quote(location+'날씨')
+            hdr = {'user-Agent': 'Mozila/5.0'}
+            url = 'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=l&ie=utf8&query=' + enc_location
+            print(url)
+            req = Request(url, headers=hdr)
+            html = urllib.request.urlopen(req)
+            bsObj = bs4.BeautifulSoup(html, "html.parser")
+            todayBase = bsObj.find('div', {'class': 'main_info'})
 
-        todayTemp1 = todayBase.find('span', {'class': 'todaytemp'})
-        todayTemp = todayTemp1.text.strip()
-        print(todayTemp)
+            todayTemp1 = todayBase.find('span', {'class': 'todaytemp'})
+            todayTemp = todayTemp1.text.strip()
+            print(todayTemp)
 
-        todayvalueBase = todayBase.find('ul', {'class': 'info_list'})
-        todayvalue2 = todayvalueBase.find('p', {'class': 'cast_txt'})
-        todayvalue = todayvalue2.text.strip()
-        print(todayvalue)
+            todayvalueBase = todayBase.find('ul', {'class': 'info_list'})
+            todayvalue2 = todayvalueBase.find('p', {'class': 'cast_txt'})
+            todayvalue = todayvalue2.text.strip()
+            print(todayvalue)
 
-        todayFeelingTemp1 = todayvalueBase.find('span', {'class': 'sensible'})
-        todayFeelingTemp = todayFeelingTemp1.text.strip()  # 체감온도
-        print(todayFeelingTemp)
+            todayFeelingTemp1 = todayvalueBase.find('span', {'class': 'sensible'})
+            todayFeelingTemp = todayFeelingTemp1.text.strip()  # 체감온도
+            print(todayFeelingTemp)
 
-        todayMiseaMongi1 = bsObj.find('div', {'class': 'sub_info'})
-        todayMiseaMongi2 = todayMiseaMongi1.find('div', {'class': 'detail_box'})
-        todayMiseaMongi3 = todayMiseaMongi2.find('dd')
-        todayMiseaMongi = todayMiseaMongi3.text  # 미세먼지
-        print(todayMiseaMongi)
+            todayMiseaMongi1 = bsObj.find('div', {'class': 'sub_info'})
+            todayMiseaMongi2 = todayMiseaMongi1.find('div', {'class': 'detail_box'})
+            todayMiseaMongi3 = todayMiseaMongi2.find('dd')
+            todayMiseaMongi = todayMiseaMongi3.text  # 미세먼지
+            print(todayMiseaMongi)
 
-        tomorrowBase = bsObj.find('div', {'class': 'table_info weekly _weeklyWeather'})
-        tomorrowTemp1 = tomorrowBase.find('li', {'class': 'date_info'})
-        tomorrowTemp2 = tomorrowTemp1.find('dl')
-        tomorrowTemp3 = tomorrowTemp2.find('dd')
-        tomorrowTemp = tomorrowTemp3.text.strip()  # 오늘 오전,오후온도
-        print(tomorrowTemp)
+            tomorrowBase = bsObj.find('div', {'class': 'table_info weekly _weeklyWeather'})
+            tomorrowTemp1 = tomorrowBase.find('li', {'class': 'date_info'})
+            tomorrowTemp2 = tomorrowTemp1.find('dl')
+            tomorrowTemp3 = tomorrowTemp2.find('dd')
+            tomorrowTemp = tomorrowTemp3.text.strip()  # 오늘 오전,오후온도
+            print(tomorrowTemp)
 
-        tomorrowAreaBase = bsObj.find('div', {'class': 'tomorrow_area'})
-        tomorrowMoring1 = tomorrowAreaBase.find('div', {'class': 'main_info morning_box'})
-        tomorrowMoring2 = tomorrowMoring1.find('span', {'class': 'todaytemp'})
-        tomorrowMoring = tomorrowMoring2.text.strip()  # 내일 오전 온도
-        print(tomorrowMoring)
+            tomorrowAreaBase = bsObj.find('div', {'class': 'tomorrow_area'})
+            tomorrowMoring1 = tomorrowAreaBase.find('div', {'class': 'main_info morning_box'})
+            tomorrowMoring2 = tomorrowMoring1.find('span', {'class': 'todaytemp'})
+            tomorrowMoring = tomorrowMoring2.text.strip()  # 내일 오전 온도
+            print(tomorrowMoring)
 
-        tomorrowValue1 = tomorrowMoring1.find('div', {'class': 'info_data'})
-        tomorrowValue = tomorrowValue1.text.strip()  # 내일 오전 날씨상태, 미세먼지 상태
-        print(tomorrowValue)
+            tomorrowValue1 = tomorrowMoring1.find('div', {'class': 'info_data'})
+            tomorrowValue = tomorrowValue1.text.strip()  # 내일 오전 날씨상태, 미세먼지 상태
+            print(tomorrowValue)
 
-        tomorrowAreaBase = bsObj.find('div', {'class': 'tomorrow_area'})
-        tomorrowAllFind = tomorrowAreaBase.find_all('div', {'class': 'main_info morning_box'})
-        tomorrowAfter1 = tomorrowAllFind[1]
-        tomorrowAfter2 = tomorrowAfter1.find('p', {'class': 'info_temperature'})
-        tomorrowAfter3 = tomorrowAfter2.find('span', {'class': 'todaytemp'})
-        tomorrowAfterTemp = tomorrowAfter3.text.strip()  # 내일 오후 온도
-        print(tomorrowAfterTemp)
+            tomorrowAreaBase = bsObj.find('div', {'class': 'tomorrow_area'})
+            tomorrowAllFind = tomorrowAreaBase.find_all('div', {'class': 'main_info morning_box'})
+            tomorrowAfter1 = tomorrowAllFind[1]
+            tomorrowAfter2 = tomorrowAfter1.find('p', {'class': 'info_temperature'})
+            tomorrowAfter3 = tomorrowAfter2.find('span', {'class': 'todaytemp'})
+            tomorrowAfterTemp = tomorrowAfter3.text.strip()  # 내일 오후 온도
+            print(tomorrowAfterTemp)
 
-        tomorrowAfterValue1 = tomorrowAfter1.find('div', {'class': 'info_data'})
-        tomorrowAfterValue = tomorrowAfterValue1.text.strip()
+            tomorrowAfterValue1 = tomorrowAfter1.find('div', {'class': 'info_data'})
+            tomorrowAfterValue = tomorrowAfterValue1.text.strip()
 
-        print(tomorrowAfterValue)  # 내일 오후 날씨상태,미세먼지
+            print(tomorrowAfterValue)  # 내일 오후 날씨상태,미세먼지
 
-        e = discord.Embed(title='오늘 '+lean[1]+'의 날씨', description=lean[1]+'의 날씨입니다.', color=0xffc0cb)
-        e.add_field(name='현재온도', value=todayTemp+'*', inline=False)
-        e.add_field(name='체감온도', value=todayFeelingTemp, inline=False)
-        e.add_field(name='현재상태', value=todayvalue, inline=False)
-        e.add_field(name='현재 미세먼지 상태', value=todayMiseaMongi, inline=False)
-        e.add_field(name='오늘 오전/오후 날씨', value=tomorrowTemp, inline=False)
-        e.add_field (name='**----------------------------------**',value='**----------------------------------**', inline=False)
-        e.add_field(name='내일 오전온도', value=tomorrowMoring+'˚', inline=False)  # 내일오전날씨
-        e.add_field(name='내일 오전날씨상태, 미세먼지 상태', value=tomorrowValue, inline=False)  # 내일오전 날씨상태
-        e.add_field(name='내일 오후온도', value=tomorrowAfterTemp + '˚', inline=False)  # 내일오후날씨
-        e.add_field(name='내일 오후날씨상태, 미세먼지 상태', value=tomorrowAfterValue, inline=False)  # 내일오후 날씨상태
-        e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
-        await message.channel.send(embed=e)
+        except AttributeError:
+            e = discord.Embed(title='오류!', description=lean[1]+'의 날씨가 존재하지 않습니다.', color=0xff0000)
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
+            await message.channel.send(embed=e)
+
+        else:
+            e = discord.Embed(title='오늘 '+lean[1]+'의 날씨', description=lean[1]+'의 날씨입니다.', color=0xffc0cb)
+            e.add_field(name='현재온도', value=todayTemp+'*', inline=False)
+            e.add_field(name='체감온도', value=todayFeelingTemp, inline=False)
+            e.add_field(name='현재상태', value=todayvalue, inline=False)
+            e.add_field(name='현재 미세먼지 상태', value=todayMiseaMongi, inline=False)
+            e.add_field(name='오늘 오전/오후 날씨', value=tomorrowTemp, inline=False)
+            e.add_field (name='**----------------------------------**',value='**----------------------------------**', inline=False)
+            e.add_field(name='내일 오전온도', value=tomorrowMoring+'˚', inline=False)  # 내일오전날씨
+            e.add_field(name='내일 오전날씨상태, 미세먼지 상태', value=tomorrowValue, inline=False)  # 내일오전 날씨상태
+            e.add_field(name='내일 오후온도', value=tomorrowAfterTemp + '˚', inline=False)  # 내일오후날씨
+            e.add_field(name='내일 오후날씨상태, 미세먼지 상태', value=tomorrowAfterValue, inline=False)  # 내일오후 날씨상태
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
+            await message.channel.send(embed=e)
     
     if message.content.startswith('초롱아 골라 '):
         tmp = message.content.split('초롱아 골라 ')[1]
@@ -261,43 +268,47 @@ async def on_message(message):
         await message.channel.send(embed=e)
 
     if message.content.startswith("초롱아 롤"):
-        learn = message.content.split("초롱아 롤 ")
-        location = learn[1]
-        enc_location = urllib.parse.quote(location)
+        try:
+            learn = message.content.split("초롱아 롤 ")
+            location = learn[1]
+            enc_location = urllib.parse.quote(location)
 
-        url = "http://www.op.gg/summoner/userName=" + enc_location
-        html = urllib.request.urlopen(url)
+            url = "http://www.op.gg/summoner/userName=" + enc_location
+            html = urllib.request.urlopen(url)
 
-        bsObj = bs4.BeautifulSoup(html, "html.parser")
-        rank1 = bsObj.find("div", {"class": "TierRankInfo"})
-        rank2 = rank1.find("div", {"class": "TierRank"})
-        rank4 = rank2.text  # 티어표시 (브론즈1,2,3,4,5 등등)
-        print(rank4)
-        if rank4 != 'Unranked':
-          jumsu1 = rank1.find("div", {"class": "TierInfo"})
-          jumsu2 = jumsu1.find("span", {"class": "LeaguePoints"})
-          jumsu3 = jumsu2.text
-          jumsu4 = jumsu3.strip()#점수표시 (11LP등등)
-          print(jumsu4)
+            bsObj = bs4.BeautifulSoup(html, "html.parser")
+            rank1 = bsObj.find("div", {"class": "TierRankInfo"})
+            rank2 = rank1.find("div", {"class": "TierRank"})
+            rank4 = rank2.text  # 티어표시 (브론즈1,2,3,4,5 등등)
+            print(rank4)
+            if rank4 != 'Unranked':
+                jumsu1 = rank1.find("div", {"class": "TierInfo"})
+                jumsu2 = jumsu1.find("span", {"class": "LeaguePoints"})
+                jumsu3 = jumsu2.text
+                jumsu4 = jumsu3.strip()#점수표시 (11LP등등)
+                print(jumsu4)
 
-          winlose1 = jumsu1.find("span", {"class": "WinLose"})
-          winlose2 = winlose1.find("span", {"class": "wins"})
-          winlose2_1 = winlose1.find("span", {"class": "losses"})
-          winlose2_2 = winlose1.find("span", {"class": "winratio"})
+                winlose1 = jumsu1.find("span", {"class": "WinLose"})
+                winlose2 = winlose1.find("span", {"class": "wins"})
+                winlose2_1 = winlose1.find("span", {"class": "losses"})
+                winlose2_2 = winlose1.find("span", {"class": "winratio"})
 
-          winlose2txt = winlose2.text
-          winlose2_1txt = winlose2_1.text
-          winlose2_2txt = winlose2_2.text #승,패,승률 나타냄  200W 150L Win Ratio 55% 등등
+                winlose2txt = winlose2.text
+                winlose2_1txt = winlose2_1.text
+                winlose2_2txt = winlose2_2.text #승,패,승률 나타냄  200W 150L Win Ratio 55% 등등
 
-          print(winlose2txt + " " + winlose2_1txt + " " + winlose2_2txt)
+                print(winlose2txt + " " + winlose2_1txt + " " + winlose2_2txt)
 
-        e=discord.Embed(title=learn[1]+'님의 롤 정보', description=learn[1]+'님의 롤 정보입니다.', color=0xffc0cb)
+        
 
-        if rank4=='Unranked':
+        except AttributeError:
+            e=discord.Embed(title=learn[1]+'님의 롤 정보', description=learn[1]+'님의 롤 정보입니다.', color=0xffc0cb)
             e.add_field(name=learn[1]+'님의 티어', value=rank4, inline=False)
             e.add_field(name=learn[1]+'님은 언랭', value='언랭은 더이성 정보를 제공하지 않습니다.', inline=False)
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
             await message.channel.send(embed=e)
         else:
+            e=discord.Embed(title=learn[1]+'님의 롤 정보', description=learn[1]+'님의 롤 정보입니다.', color=0xffc0cb)
             e.add_field(name=learn[1]+'님의 티어', value=rank4, inline=False)
             e.add_field(name=learn[1]+'님의 LP(점수)', value=jumsu4, inline=False)
             e.add_field(name=learn[1]+'님의 승패 정보', value=winlose2txt+" "+winlose2_1txt, inline=False)
@@ -306,22 +317,25 @@ async def on_message(message):
             await message.channel.send(embed=e)
 
     if message.content.startswith("초롱아 배그솔로"):
-        learn = message.content.split('초롱아 배그솔로 ')
-        location = learn[1]
-        enc_location = urllib.parse.quote(location)
-        url = "https://dak.gg/profile/"+enc_location
-        html = urllib.request.urlopen(url)
-        bsObj = bs4.BeautifulSoup(html, "html.parser")
-        solo1 = bsObj.find("div", {"class": "overview"})
-        solo2 = solo1.text
-        solo3 = solo2.strip()
+        try:
+            learn = message.content.split('초롱아 배그솔로 ')
+            location = learn[1]
+            enc_location = urllib.parse.quote(location)
+            url = "https://dak.gg/profile/"+enc_location
+            html = urllib.request.urlopen(url)
+            bsObj = bs4.BeautifulSoup(html, "html.parser")
+            solo1 = bsObj.find("div", {"class": "overview"})
+            solo2 = solo1.text
+            solo3 = solo2.strip()
 
-        e=discord.Embed(title=learn[1]+'님의 배그솔로 전적', description=learn[1]+'님의 배그솔로 전적입니다.', color=0xffc0cb)
-        if solo3 == "No record":
+        except AttributeError:
+            e=discord.Embed(title=learn[1]+'님의 배그솔로 전적', description=learn[1]+'님의 배그솔로 전적입니다.', color=0xffc0cb)
             print("솔로 경기가 없습니다.")
-            e.add_field(name=learn[1]+'님 배그를 한판이라도 플레이 해주세요', value=learn[1]+'님은 솔로 경기를 안하셨습니다.', color=0xffc0cb)
+            e.add_field(name=learn[1]+'님 배그를 한판이라도 플레이 해주세요', value=learn[1]+'님은 솔로 경기를 안하셨습니다.', inline=False)
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
             await message.channel.send(embed=e)
         else:
+            e=discord.Embed(title=learn[1]+'님의 배그솔로 전적', description=learn[1]+'님의 배그솔로 전적입니다.', color=0xffc0cb)
             solo4 = solo1.find("span", {"class": "value"})
             soloratting = solo4.text
             solorank0_1 = solo1.find("div", {"class": "grade-info"})
@@ -371,23 +385,26 @@ async def on_message(message):
             await message.channel.send(embed=e)
 
     if message.content.startswith("초롱아 배그듀오"):
-        learn = message.content.split("초롱아 배그듀오 ")
-        location = learn[1]
-        enc_location = urllib.parse.quote(location)
-        url = "https://dak.gg/profile/" + enc_location
-        html = urllib.request.urlopen(url)
-        bsObj = bs4.BeautifulSoup(html, "html.parser")
-        duoCenter1 = bsObj.find("section", {"class": "duo modeItem"})
-        duoRecord1 = duoCenter1.find("div", {"class": "overview"})
-        duoRecord = duoRecord1.text.strip()  # ----기록이없습니다 문구----
-        print(duoRecord)
-        
-        e=discord.Embed(title=learn[1]+'님의 배그 듀오 전적', description=learn[1]+'님의 배그 듀오 전적입니다.', color=0xffc0cb)
-        if duoRecord == 'No record':
+        try:
+            learn = message.content.split("초롱아 배그듀오 ")
+            location = learn[1]
+            enc_location = urllib.parse.quote(location)
+            url = "https://dak.gg/profile/" + enc_location
+            html = urllib.request.urlopen(url)
+            bsObj = bs4.BeautifulSoup(html, "html.parser")
+            duoCenter1 = bsObj.find("section", {"class": "duo modeItem"})
+            duoRecord1 = duoCenter1.find("div", {"class": "overview"})
+            duoRecord = duoRecord1.text.strip()  # ----기록이없습니다 문구----
+            print(duoRecord)
+
+        except AttributeError:
             print(learn[1]+'님의 듀오 전적이 없습니다.')
+            e=discord.Embed(title=learn[1]+'님의 배그 듀오 전적', description=learn[1]+'님의 배그 듀오 전적입니다.', color=0xffc0cb)
             e.add_field(name=learn[1]+'님 배그 듀오를 한판이라도 플레이 해주세요.', value=learn[1]+'님의 배그 듀오 전적이 없습니다.')
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
             await message.channel.send(embed=e)
         else:
+            e=discord.Embed(title=learn[1]+'님의 배그 듀오 전적', description=learn[1]+'님의 배그 듀오 전적입니다.', color=0xffc0cb)
             duoRat1 = duoRecord1.find("span", {"class": "value"})
             duoRat = duoRat1.text.strip()
             duoRank1 = duoRecord1.find("p", {"class": "grade-name"})
@@ -429,24 +446,26 @@ async def on_message(message):
             await message.channel.send(embed=e)
 
     if message.content.startswith("초롱아 배그스쿼드"):
-        learn = message.content.split("초롱아 배그스쿼드 ")
-        location = learn[1]
-        enc_location = urllib.parse.quote(location)
-        url = "https://dak.gg/profile/" + enc_location
-        html = urllib.request.urlopen(url)
-        bsObj = bs4.BeautifulSoup(html, "html.parser")
-        duoCenter1 = bsObj.find("section", {"class": "squad modeItem"})
-        duoRecord1 = duoCenter1.find("div", {"class": "overview"})
-        duoRecord = duoRecord1.text.strip()  # ----기록이없습니다 문구----
-        print(duoRecord)
+        try:
+            learn = message.content.split("초롱아 배그스쿼드 ")
+            location = learn[1]
+            enc_location = urllib.parse.quote(location)
+            url = "https://dak.gg/profile/" + enc_location
+            html = urllib.request.urlopen(url)
+            bsObj = bs4.BeautifulSoup(html, "html.parser")
+            duoCenter1 = bsObj.find("section", {"class": "squad modeItem"})
+            duoRecord1 = duoCenter1.find("div", {"class": "overview"})
+            duoRecord = duoRecord1.text.strip()  # ----기록이없습니다 문구----
+            print(duoRecord)
 
-        e=discord.Embed(title=learn[1]+'님의 배그스쿼드 전적', description=learn[1]+'님의 배그스쿼드 전적입니다.', color=0xffc0cb)
-
-        if duoRecord == 'No record':
+        except AttributeError:
             print('스쿼드 경기가 없습니다.')
+            e=discord.Embed(title=learn[1]+'님의 배그스쿼드 전적', description=learn[1]+'님의 배그스쿼드 전적입니다.', color=0xffc0cb)
             e.add_field(name=learn[1]+'님 배그스쿼드를 한판이라도 플레이 해주세요', value=learn[1]+'님의 배그 전적이 없습니다.', inline=False)
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
             await message.channel.send(embed=e)
         else:
+            e=discord.Embed(title=learn[1]+'님의 배그스쿼드 전적', description=learn[1]+'님의 배그스쿼드 전적입니다.', color=0xffc0cb)
             duoRat1 = duoRecord1.find("span", {"class": "value"})
             duoRat = duoRat1.text.strip()  # ----레이팅----
             duoRank1 = duoRecord1.find("p", {"class": "grade-name"})
@@ -555,40 +574,53 @@ async def on_message(message):
         await message.channel.send(embed=e)
 
     if message.content.startswith("초롱아 단어"):
-        learn = message.content.split("초롱아 단어 ")
-        location = learn[1]
-        enc_location = urllib.parse.quote(location)
-        url = "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword="+enc_location
-        html = urllib.request.urlopen(url)
-        bsObj = bs4.BeautifulSoup(html, "html.parser")
+        try:
+            learn = message.content.split("초롱아 단어 ")
+            location = learn[1]
+            enc_location = urllib.parse.quote(location)
+            url = "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword="+enc_location
+            html = urllib.request.urlopen(url)
+            bsObj = bs4.BeautifulSoup(html, "html.parser")
 
-        word1 = bsObj.find("a", {"class":"t_blue1"})
-        word2 = word1.text
+            word1 = bsObj.find("a", {"class":"t_blue1"})
+            word2 = word1.text
         
-        mean1 = bsObj.find("font", {"class":"dataLine"})
-        mean2 = mean1.text
-        print(word2 + mean2)
+            mean1 = bsObj.find("font", {"class":"dataLine"})
+            mean2 = mean1.text
+            print(word2 + mean2)
 
-        e=discord.Embed(title=learn[1]+'의 단어뜻', description=learn[1]+'의 단어뜻 입니다.', color=0xffc0cb)
-        e.add_field(name=word2, value=mean2, inline=False)
-        e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
-        await message.channel.send(embed=e)
+        except AttributeError:
+            e = discord.Embed(title='오류!', description=learn[1]+'의 단어는 표준국어대사전에 존재하지 않습니다.', color=0xff0000)
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
+            await message.channel.send(embed=e)
+        
+        else:
+            e=discord.Embed(title=learn[1]+'의 단어뜻', description=learn[1]+'의 단어뜻 입니다.', color=0xffc0cb)
+            e.add_field(name=word2, value=mean2, inline=False)
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
+            await message.channel.send(embed=e)
 
     if message.content.startswith("초롱아 전화번호"):
-        learn = message.content.split("초롱아 전화번호 ")
-        location = learn[1]
-        enc_location = urllib.parse.quote(location)
-        url = "https://search.naver.com/search.naver?sm=top_hty&fbm=1&ie=utf8&query="+enc_location
-        html = urllib.request.urlopen(url)
-        bsObj = bs4.BeautifulSoup(html, "html.parser")
+        try:
+            learn = message.content.split("초롱아 전화번호 ")
+            location = learn[1]
+            enc_location = urllib.parse.quote(location)
+            url = "https://search.naver.com/search.naver?sm=top_hty&fbm=1&ie=utf8&query="+enc_location
+            html = urllib.request.urlopen(url)
+            bsObj = bs4.BeautifulSoup(html, "html.parser")
 
-        callnumber1 = bsObj.find("div", {"class":"txt"})
-        callnumber2 = callnumber1.text
+            callnumber1 = bsObj.find("div", {"class":"txt"})
+            callnumber2 = callnumber1.text
 
-        e = discord.Embed(title=learn[1]+'의 전화번호', descripiton=learn[1]+'의 전화번호입니다.', color=0xffc0cb)
-        e.add_field(name=learn[1]+' 전화번호', value=callnumber2, inline=False)
-        e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
-        await message.channel.send(embed=e)
+        except AttributeError:
+            e=discord.Embed(title='오류!', description=learn[1]+'의 전화번호가 존재하지 않습니다.', color=0xff0000)
+            await message.channel.send(embed=e)
+
+        else:
+            e = discord.Embed(title=learn[1]+'의 전화번호', descripiton=learn[1]+'의 전화번호입니다.', color=0xffc0cb)
+            e.add_field(name=learn[1]+' 전화번호', value=callnumber2, inline=False)
+            e.set_footer(text='사용자:%s#%s' % (message.author.name, message.author.discriminator), icon_url=message.author.avatar_url)
+            await message.channel.send(embed=e)
     
     if message.content.startswith("초롱아 핑"):
         ping = client.latency
@@ -601,6 +633,8 @@ async def on_message(message):
 
     
 
+    
+
 
 
     
@@ -615,5 +649,5 @@ async def on_message(message):
 
 
     
-access_token = os.environ['TOKEN']
-client.run(access_token)
+
+client.run(setting.token)
